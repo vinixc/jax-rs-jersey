@@ -1,8 +1,14 @@
 package br.com.vini.loja.jax.rs.modelo;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Projeto {
 	
 	private Long id;
@@ -14,7 +20,10 @@ public class Projeto {
 		this.nome = nome;
 		this.anoDeInicio = anoDeInicio;
 	}
-
+	
+	public Projeto() {
+	}
+	
 	public Long getId() {
 		return id;
 	}
