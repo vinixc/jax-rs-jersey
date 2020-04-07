@@ -8,6 +8,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +25,16 @@ public class ClienteTest {
 	
 	private HttpServer server;
 	private Client client;
+	private WebTarget target;
 
 	@Before
 	public void before() {
 		server = Servidor.inicializaServidor();
+		ClientConfig config = new ClientConfig();
+		config.register(new LoggingFilter());
+		
+		this.client = ClientBuilder.newClient(config);
+		this.target = client.target("http://localhost:8080");
 	}
 	
 	@After
@@ -37,8 +45,7 @@ public class ClienteTest {
 	@Test
 	public void testaQueBuscarUmCarrinhoTrazOCarrinhoEsperado() {
 		
-		client = ClientBuilder.newClient();
-		WebTarget target = client.target("http://localhost:8080");
+		
 		String conteudo = target.path("/carrinhos/1").request().get(String.class);
 		System.out.println(conteudo);
 		Carrinho carrinho = (Carrinho) new XStream().fromXML(conteudo);
@@ -57,9 +64,6 @@ public class ClienteTest {
 	
 	@Test
 	public void testaPostParaCarrinhos() {
-		Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://localhost:8080");
-        
         Carrinho carrinho = new Carrinho();
         carrinho.adiciona(new Produto(314L, "Tablet", 999, 1));
         carrinho.setRua("Rua Vergueiro");
@@ -77,9 +81,6 @@ public class ClienteTest {
 	
 	@Test
 	public void testaPostParaProjetos() {
-		client = ClientBuilder.newClient();
-		 WebTarget target = client.target("http://localhost:8080");
-		 
 		 Projeto projeto = new Projeto(2l, "jogos", 2020);
 		 String xml = projeto.toXML();
 		 
